@@ -113,41 +113,144 @@ fi
 # ──────────────────────────────────────────
 echo -e "\n${BLUE}>>> Step 4/4: Generating MCP configuration...${NC}"
 
-# Load API keys from .env if it exists
-SOCRATA_TOKEN=""
-DC_KEY=""
-if [ -f "$PROJECT_DIR/.env" ]; then
-    echo "Loading API keys from .env..."
-    set -a
-    source "$PROJECT_DIR/.env" 2>/dev/null || true
-    set +a
-    SOCRATA_TOKEN="${SOCRATA_APP_TOKEN:-}"
-    DC_KEY="${DC_API_KEY:-}"
+# API keys come from (in priority order):
+#   1. Codespaces Secrets (auto-injected as env vars)
+#   2. .env file in the project
+# If neither is set, Socrata works without a token (just rate-limited),
+# and Data Commons is skipped entirely.
+
+SOCRATA_TOKEN="${SOCRATA_APP_TOKEN:-}"
+DC_KEY="${DC_API_KEY:-}"
+
+# Fall back to .env file if Codespaces Secrets aren't set
+if [ -z "$SOCRATA_TOKEN" ] || [ -z "$DC_KEY" ]; then
+    if [ -f "$PROJECT_DIR/.env" ]; then
+        echo "Loading API keys from .env..."
+        set -a
+        source "$PROJECT_DIR/.env" 2>/dev/null || true
+        set +a
+        [ -z "$SOCRATA_TOKEN" ] && SOCRATA_TOKEN="${SOCRATA_APP_TOKEN:-}"
+        [ -z "$DC_KEY" ] && DC_KEY="${DC_API_KEY:-}"
+    fi
 fi
 
-[ -z "$SOCRATA_TOKEN" ] && SOCRATA_TOKEN="YOUR_SOCRATA_TOKEN_HERE"
-[ -z "$DC_KEY" ] && DC_KEY="YOUR_DC_API_KEY_HERE"
+DATACOMMONS_PATH=$(command -v datacommons-mcp 2>/dev/null || echo "")
 
-DATACOMMONS_PATH=$(command -v datacommons-mcp 2>/dev/null || echo "datacommons-mcp")
+# Determine which servers to include
+INCLUDE_OPENGOV=false
+INCLUDE_DATACOMMONS=false
 
-# Generate .vscode/mcp.json (primary config for Codespaces)
-if [ -f "$PROJECT_DIR/.vscode/mcp.json.example" ]; then
-    mkdir -p "$PROJECT_DIR/.vscode"
-    sed -e "s|__SOCRATA_APP_TOKEN__|$SOCRATA_TOKEN|g" \
-        -e "s|__DC_API_KEY__|$DC_KEY|g" \
-        -e "s|__DATACOMMONS_MCP_PATH__|$DATACOMMONS_PATH|g" \
-        "$PROJECT_DIR/.vscode/mcp.json.example" > "$PROJECT_DIR/.vscode/mcp.json"
+if [ -f "$OPENGOV_DIR/dist/index.js" ]; then
+    INCLUDE_OPENGOV=true
+else
+    echo -e "${YELLOW}[SKIP]${NC} OpenGov server not built — excluding from MCP config"
+    WARNINGS+=("OpenGov MCP not available (build missing)")
+fi
+
+if [ -n "$DATACOMMONS_PATH" ] && [ -n "$DC_KEY" ]; then
+    INCLUDE_DATACOMMONS=true
+elif [ -z "$DATACOMMONS_PATH" ]; then
+    echo -e "${YELLOW}[SKIP]${NC} datacommons-mcp not installed — excluding from MCP config"
+elif [ -z "$DC_KEY" ]; then
+    echo -e "${YELLOW}[SKIP]${NC} No DC_API_KEY found — excluding Data Commons from MCP config"
+    echo -e "         Set it via Codespaces Secrets or .env to enable Data Commons"
+fi
+
+# Build .vscode/mcp.json dynamically
+mkdir -p "$PROJECT_DIR/.vscode"
+{
+    echo '{'
+    echo '  "servers": {'
+
+    NEED_COMMA=false
+
+    if $INCLUDE_OPENGOV; then
+        $NEED_COMMA && echo ','
+        echo '    "opengov": {'
+        echo '      "type": "stdio",'
+        echo '      "command": "node",'
+        echo "      \"args\": [\"\${workspaceFolder}/.mcp-servers/opengov-mcp-server/dist/index.js\", \"--stdio\"],"
+        echo '      "env": {'
+        echo '        "DEFAULT_DOMAIN": "data.cityofnewyork.us",'
+        if [ -n "$SOCRATA_TOKEN" ]; then
+            echo "        \"SOCRATA_APP_TOKEN\": \"$SOCRATA_TOKEN\","
+        fi
+        echo '        "CACHE_ENABLED": "true",'
+        echo '        "LOG_LEVEL": "info"'
+        echo '      }'
+        echo -n '    }'
+        NEED_COMMA=true
+    fi
+
+    if $INCLUDE_DATACOMMONS; then
+        $NEED_COMMA && echo ','
+        echo '    "data-commons": {'
+        echo '      "type": "stdio",'
+        echo "      \"command\": \"$DATACOMMONS_PATH\","
+        echo '      "args": ["serve", "--skip-api-key-validation", "stdio"],'
+        echo '      "env": {'
+        echo "        \"DC_API_KEY\": \"$DC_KEY\""
+        echo '      }'
+        echo -n '    }'
+        NEED_COMMA=true
+    fi
+
+    echo ''
+    echo '  }'
+    echo '}'
+} > "$PROJECT_DIR/.vscode/mcp.json"
+
+if $INCLUDE_OPENGOV || $INCLUDE_DATACOMMONS; then
     echo -e "${GREEN}[OK]${NC} Created .vscode/mcp.json"
+    $INCLUDE_OPENGOV && echo -e "       ${GREEN}✓${NC} OpenGov MCP (Socrata${SOCRATA_TOKEN:+ — API key set}${SOCRATA_TOKEN:- — no key, rate-limited})"
+    $INCLUDE_DATACOMMONS && echo -e "       ${GREEN}✓${NC} Data Commons MCP"
+else
+    echo -e "${YELLOW}[WARN]${NC} No MCP servers available — .vscode/mcp.json is empty"
 fi
 
 # Generate .mcp.json (for Claude Code CLI, if used in Codespace)
-if [ -f "$PROJECT_DIR/.mcp.json.example" ]; then
-    sed -e "s|__SOCRATA_APP_TOKEN__|$SOCRATA_TOKEN|g" \
-        -e "s|__DC_API_KEY__|$DC_KEY|g" \
-        -e "s|__DATACOMMONS_MCP_PATH__|$DATACOMMONS_PATH|g" \
-        "$PROJECT_DIR/.mcp.json.example" > "$PROJECT_DIR/.mcp.json"
-    echo -e "${GREEN}[OK]${NC} Created .mcp.json"
-fi
+{
+    echo '{'
+    echo '  "mcpServers": {'
+
+    NEED_COMMA=false
+
+    if $INCLUDE_OPENGOV; then
+        $NEED_COMMA && echo ','
+        echo '    "opengov": {'
+        echo '      "type": "stdio",'
+        echo '      "command": "node",'
+        echo "      \"args\": [\".mcp-servers/opengov-mcp-server/dist/index.js\", \"--stdio\"],"
+        echo '      "env": {'
+        echo '        "DEFAULT_DOMAIN": "data.cityofnewyork.us",'
+        if [ -n "$SOCRATA_TOKEN" ]; then
+            echo "        \"SOCRATA_APP_TOKEN\": \"$SOCRATA_TOKEN\","
+        fi
+        echo '        "CACHE_ENABLED": "true",'
+        echo '        "LOG_LEVEL": "info"'
+        echo '      }'
+        echo -n '    }'
+        NEED_COMMA=true
+    fi
+
+    if $INCLUDE_DATACOMMONS; then
+        $NEED_COMMA && echo ','
+        echo '    "data-commons": {'
+        echo '      "type": "stdio",'
+        echo "      \"command\": \"$DATACOMMONS_PATH\","
+        echo '      "args": ["serve", "--skip-api-key-validation", "stdio"],'
+        echo '      "env": {'
+        echo "        \"DC_API_KEY\": \"$DC_KEY\""
+        echo '      }'
+        echo -n '    }'
+        NEED_COMMA=true
+    fi
+
+    echo ''
+    echo '  }'
+    echo '}'
+} > "$PROJECT_DIR/.mcp.json"
+echo -e "${GREEN}[OK]${NC} Created .mcp.json"
 
 # ──────────────────────────────────────────
 # Done — print summary
@@ -174,6 +277,16 @@ echo "  1. Open Copilot Chat (sidebar chat icon or Ctrl+Shift+I)"
 echo "  2. Switch to Agent mode (dropdown at the top of chat)"
 echo "  3. Ask a question like: \"What are the top 311 complaint types in NYC?\""
 echo ""
+if [ -z "$SOCRATA_TOKEN" ] && [ -z "$DC_KEY" ]; then
+    echo -e "${YELLOW}API KEYS:${NC}"
+    echo ""
+    echo "  No API keys detected. OpenGov works without a key (rate-limited)."
+    echo "  For full access, set Codespaces Secrets in your repo settings:"
+    echo "    → Settings → Secrets and variables → Codespaces"
+    echo "    → Add SOCRATA_APP_TOKEN and/or DC_API_KEY"
+    echo "    → Then rebuild the Codespace"
+    echo ""
+fi
 echo -e "${YELLOW}TROUBLESHOOTING:${NC}"
 echo ""
 echo "  • \"Language model unavailable\" or Copilot not loading?"

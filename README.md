@@ -8,7 +8,14 @@ A standalone example for querying NYC Open Data and Google Data Commons using MC
 
 ### GitHub Codespaces (fastest)
 
-Click the badge above to launch a Codespace. The dev container automatically runs `./scripts/setup.sh`, which builds the MCP servers and generates config files.
+Click the badge above to launch a Codespace. The dev container automatically builds the MCP servers and generates config files.
+
+**API Keys (optional but recommended):** Before launching, add Codespaces Secrets in your repo fork:
+1. Go to **Settings → Secrets and variables → Codespaces**
+2. Add `SOCRATA_APP_TOKEN` ([get one free](https://data.cityofnewyork.us/profile/edit/developer_settings))
+3. Add `DC_API_KEY` (optional — enables Google Data Commons)
+
+> Without keys, OpenGov MCP still works (rate-limited). Data Commons requires a key and is skipped if none is set.
 
 Once the Codespace is ready:
 1. Open the Copilot Chat panel (the chat icon in the sidebar, or `Ctrl+Shift+I`)
