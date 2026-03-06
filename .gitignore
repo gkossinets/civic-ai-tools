@@ -6,13 +6,32 @@
 .cursor/mcp.json
 .vscode/mcp.json
 
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+configs/
+
+# Generated outputs
+visualizations/
+analysis_results.json
+*_results.json
+*.output.json
+output/
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
 venv/
-.env
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Streamlit
+.streamlit/secrets.toml
 
 # macOS
 .DS_Store
@@ -25,5 +44,5 @@ venv/
 # Temp files
 temp/
 
-# Analysis outputs
+# Logs
 *.log

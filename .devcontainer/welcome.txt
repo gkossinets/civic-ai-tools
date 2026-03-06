@@ -1,0 +1,24 @@
+
+  Civic AI Tools — Your environment is ready!
+
+  Welcome! You can start querying civic data right away.
+
+  Try this:
+    1. Open Copilot Chat (sidebar chat icon or Ctrl+Shift+I)
+    2. Switch to Agent mode (dropdown at top of chat)
+    3. Ask: "What are the top 311 complaint types in NYC?"
+
+  Key files:
+    README.md              Overview and quick start guide
+    examples/              Ready-to-run example scripts
+    docs/setup.md          Detailed setup and troubleshooting
+
+  API keys (optional):
+    See .env.example for what's needed and where to get each key.
+    Most are free and only affect rate limits.
+
+  Copilot not loading?
+    Ctrl+Shift+P > "Developer: Reload Window" (normal on first load)
+
+  Questions? https://github.com/npstorey/civic-ai-tools/issues
+

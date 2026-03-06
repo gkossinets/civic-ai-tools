@@ -109,6 +109,18 @@ else
 fi
 
 # ──────────────────────────────────────────
+# Set welcome message for Codespaces first-run notice
+# ──────────────────────────────────────────
+if [ -f "$PROJECT_DIR/.devcontainer/welcome.txt" ]; then
+    sudo cp "$PROJECT_DIR/.devcontainer/welcome.txt" \
+        /usr/local/etc/vscode-dev-containers/first-run-notice.txt 2>/dev/null || true
+    if [ -d /workspaces/.codespaces/shared ]; then
+        sudo cp "$PROJECT_DIR/.devcontainer/welcome.txt" \
+            /workspaces/.codespaces/shared/first-run-notice.txt 2>/dev/null || true
+    fi
+fi
+
+# ──────────────────────────────────────────
 # Note: MCP config generation happens in post-start.sh
 # (Codespaces Secrets aren't available during prebuild,
 #  so configs must be generated at runtime.)

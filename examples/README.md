@@ -13,6 +13,7 @@ This folder contains example scripts demonstrating civic data analysis using MCP
 | `create_visualizations.py` | Chart generation examples |
 | `create_html_visualizations.py` | HTML-based visualization output |
 | `interactive_mcp_example.py` | Interactive MCP query examples |
+| `dashboard_311.py` | Streamlit dashboard with embedded NYC 311 data |
 
 ## Running the 311 Dashboard
 

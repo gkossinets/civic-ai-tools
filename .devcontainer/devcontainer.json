@@ -9,10 +9,14 @@
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "postStartCommand": "bash .devcontainer/post-start.sh",
   "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md"]
+    },
     "vscode": {
       "extensions": [
         "GitHub.copilot",
-        "GitHub.copilot-chat"
+        "GitHub.copilot-chat",
+        "ms-python.python"
       ],
       "settings": {
         "chat.agent.enabled": true,

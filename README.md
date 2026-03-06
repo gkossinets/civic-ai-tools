@@ -1,91 +1,110 @@
-# Civic AI Tools - Example Project
+# Civic AI Tools
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/npstorey/civic-ai-tools)
 
-A standalone example for querying NYC Open Data and Google Data Commons using MCP (Model Context Protocol) servers. Works with **Cursor IDE** and **Claude Code CLI**.
+**Use AI to explore NYC Open Data and Google Data Commons — no advanced programming required.**
 
-## Quick Start
+Civic AI Tools connects AI assistants (GitHub Copilot, Cursor, Claude Code) to public datasets using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). Think of MCP as a universal adapter that lets AI talk directly to data sources — so you can ask questions in plain English and get answers from real civic data.
 
-### GitHub Codespaces (fastest)
+**Built for** civic technologists, government workers, journalists, and students exploring public data with AI.
 
-Click the badge above to launch a Codespace. The dev container automatically builds the MCP servers and generates config files.
+## What can you do with this?
 
-**API Keys (optional but recommended):** Before launching, add Codespaces Secrets in your repo fork:
-1. Go to **Settings → Secrets and variables → Codespaces**
-2. Add `SOCRATA_APP_TOKEN` ([get one free](https://data.cityofnewyork.us/profile/edit/developer_settings))
-3. Add `DC_API_KEY` (optional — enables Google Data Commons)
+- Ask questions about NYC 311 complaints, restaurant inspections, or housing violations in plain English
+- Pull population, income, and demographic data from Google Data Commons
+- Generate visualizations and dashboards from live civic datasets
+- Compare statistics across cities and time periods
 
-> Without keys, OpenGov MCP still works (rate-limited). Data Commons requires a key and is skipped if none is set.
+**Example queries you can ask:**
+- "What are the top 311 complaint types in NYC?"
+- "Show me restaurant inspection grades by borough"
+- "Compare NYC's population trend with Los Angeles and Chicago"
 
-Once the Codespace is ready:
-1. Open the Copilot Chat panel (the chat icon in the sidebar, or `Ctrl+Shift+I`)
-2. Switch to **Agent** mode (dropdown at the top of the chat panel)
-3. Start asking questions — MCP tools are available automatically
+## Quick start
 
-> **Copilot showing "Language model unavailable"?** This is a known timing issue on first load. Open the Command Palette (`Ctrl+Shift+P`) → "Developer: Reload Window" and wait for it to reconnect. You need a [GitHub Copilot](https://github.com/features/copilot) subscription (free tier works).
+### Option 1: GitHub Codespaces (recommended — nothing to install)
 
-### Local setup
+1. Click the **"Open in GitHub Codespaces"** button above
+2. Wait for the environment to build (everything is installed automatically)
+3. Open **Copilot Chat** (sidebar chat icon or `Ctrl+Shift+I`), switch to **Agent** mode, and start asking questions
+
+**Optional:** For higher rate limits, add Codespaces Secrets before launching:
+- Go to your fork's **Settings > Secrets and variables > Codespaces**
+- Add `SOCRATA_APP_TOKEN` ([get one free](https://data.cityofnewyork.us/profile/edit/developer_settings))
+- Add `DC_API_KEY` ([get one free](https://apikeys.datacommons.org/)) — required for Data Commons
+
+> Without API keys, NYC Open Data queries still work (with lower rate limits). Data Commons is skipped if no key is set.
+
+### Option 2: Local setup
 
 ```bash
 git clone https://github.com/npstorey/civic-ai-tools.git
 cd civic-ai-tools
-./scripts/setup.sh
+cp .env.example .env       # Add your API keys (see file for instructions)
+./scripts/setup.sh         # Builds MCP servers and generates config files
 ```
 
-The setup script automatically:
-- Builds the OpenGov MCP server
-- Installs Data Commons MCP
-- Generates config files for VS Code, Cursor, and Claude Code
+Then open the project in your preferred tool:
+- **VS Code + Copilot** — Reload window (`Ctrl+Shift+P` > "Developer: Reload Window"), use Copilot Chat in Agent mode
+- **Cursor** — Open the folder in Cursor (restart if MCP servers don't appear)
+- **Claude Code** — Run `claude` in this directory and approve the MCP servers when prompted
 
-Then:
-- **VS Code + Copilot**: Open the folder, reload window, use Copilot Chat in Agent mode
-- **Cursor**: Open the folder in Cursor (restart Cursor if servers don't appear)
-- **Claude Code**: Run `claude` and approve the MCP servers
+See [docs/setup.md](docs/setup.md) for detailed instructions and troubleshooting.
 
-See [SETUP.md](SETUP.md) for detailed instructions and troubleshooting.
+## What's included
 
-## What's Included
+| MCP Server | Data Source | What you can query |
+|------------|-------------|-------------------|
+| **OpenGov MCP** | [NYC Open Data](https://data.cityofnewyork.us/) | 311 complaints, restaurant inspections, housing violations, traffic data, and 2,000+ other datasets |
+| **Data Commons MCP** | [Google Data Commons](https://datacommons.org/) | Population, income, demographics, and other statistical indicators across cities, states, and countries |
 
-**MCP Servers:**
-- **OpenGov MCP** - Query NYC Open Data (311 complaints, restaurant inspections, housing violations, etc.)
-- **Data Commons MCP** - Access Google Data Commons (population, income, demographics)
-
-**Example Queries:**
-- "What are the top 311 complaint types in NYC?"
-- "Show me restaurant grades by borough"
-- "Compare NYC's population with other major cities"
-
-## Requirements
+## Requirements (local setup only)
 
 - Node.js 18+
 - Python 3.11+
-- [uv](https://github.com/astral-sh/uv) (recommended)
+- [uv](https://github.com/astral-sh/uv) (recommended) — install with `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
-## Standalone Scripts
+## Example scripts
 
-Several scripts can be run directly with [`uv`](https://docs.astral.sh/uv/getting-started/installation/) — no virtualenv or `requirements.txt` needed. Each script has inline [PEP 723](https://peps.python.org/pep-0723/) metadata so `uv` automatically installs the right dependencies in an isolated environment:
+The `examples/` directory contains standalone scripts you can run directly with [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
-# Fetch and analyze live NYC Open Data + Data Commons data
-uv run examples/real_data_analysis.py
-
-# Generate matplotlib charts from analysis results
-uv run examples/create_visualizations.py
-
-# Generate an interactive HTML dashboard (no extra deps)
-uv run examples/create_html_visualizations.py
-
-# Launch a live Streamlit dashboard querying NYC 311 API
-uv run examples/nyc_311_dashboard.py
-
-# Launch the embedded-data Streamlit dashboard
-uv run dashboard_311_dec2025.py
+uv run examples/real_data_analysis.py         # Fetch and analyze live NYC + Data Commons data
+uv run examples/nyc_311_dashboard.py          # Launch a Streamlit dashboard of 311 data
+uv run examples/create_html_visualizations.py # Generate an interactive HTML dashboard
 ```
 
-Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+See [examples/README.md](examples/README.md) for the full list.
+
+## Related projects
+
+| Repository | Description |
+|-----------|-------------|
+| [opengov-mcp-server](https://github.com/npstorey/opengov-mcp-server) | The MCP server that connects AI tools to Socrata/OpenGov data portals. This repo uses it as a dependency. |
+| [civic-ai-tools-website](https://github.com/npstorey/civic-ai-tools-website) | Demo website at [civicaitools.org](https://civicaitools.org) — side-by-side comparison of AI with and without live data access |
 
 ## Documentation
 
-- [SETUP.md](SETUP.md) - Complete setup instructions
-- [docs/opengov-skill.md](docs/opengov-skill.md) - OpenGov query patterns and guidance
-- [CLAUDE.md](CLAUDE.md) - Claude Code specific instructions
+- [docs/setup.md](docs/setup.md) — Complete setup, tool-specific instructions, and troubleshooting
+- [docs/opengov-skill.md](docs/opengov-skill.md) — OpenGov query patterns and SoQL syntax reference
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines — there are ways to help even if you don't write code.
+
+## Glossary
+
+New to some of these terms? Here's a quick reference:
+
+| Term | What it means |
+|------|--------------|
+| **Repo** (repository) | A folder of code hosted on GitHub that tracks changes over time |
+| **Clone** | Download a copy of a repo to your computer |
+| **MCP** | Model Context Protocol — a standard way for AI tools to connect to external data sources |
+| **API** | Application Programming Interface — a way for programs to request data from a service |
+| **API key** | A password-like string that identifies you when making API requests |
+| **Codespace** | A cloud development environment that runs in your browser — no local setup needed |
+
+## Disclaimer
+
+This is a personal project and is not affiliated with, endorsed by, or representative of any employer or organization.

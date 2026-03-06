@@ -12,7 +12,7 @@ A standalone example for querying civic data using MCP servers:
 
 Run `./scripts/setup.sh` to install dependencies and verify configuration.
 
-See [SETUP.md](SETUP.md) for detailed instructions.
+See [docs/setup.md](docs/setup.md) for detailed instructions.
 
 ## MCP Configuration
 
