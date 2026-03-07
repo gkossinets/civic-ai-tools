@@ -342,7 +342,7 @@ This script fetches real data from the same sources that MCP servers use,
 demonstrating what's possible with civic data analysis.
 
 Fetching data from:
-  🏛️  NYC Open Data (Socrata API) - via opengov-mcp-server
+  🏛️  NYC Open Data (Socrata API) - via socrata-mcp-server
   🌍  Google Data Commons - via data-commons-mcp
 
 """)

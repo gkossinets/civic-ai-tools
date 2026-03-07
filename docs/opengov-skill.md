@@ -1,6 +1,8 @@
-# OpenGov MCP Companion Skill
+# Socrata MCP Companion Skill
 
-Guidance for querying Socrata open data portals through the OpenGov MCP Server.
+> **Note:** This was formerly called "OpenGov MCP" — renamed to avoid confusion with OpenGov Inc. The MCP server repo is now [socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server).
+
+Guidance for querying Socrata open data portals through the Socrata MCP Server.
 
 ## Purpose
 

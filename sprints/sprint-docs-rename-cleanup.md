@@ -61,21 +61,22 @@ These changes affect the live deployment and should be done as one coordinated u
 - [x] Update Render repository link to `npstorey/socrata-mcp-server`
 - [x] Update `OPENGOV_MCP_URL` value in Vercel to new Render URL
 - [x] Verified live site still works at civicaitools.org
-- [ ] Rename env var: `OPENGOV_MCP_URL` → `SOCRATA_MCP_URL` in Vercel dashboard (after code change)
-- [ ] Rename `opengovMcpTools` → `socrataMcpTools` in `src/lib/mcp/tools.ts`
-- [ ] Update imports in `src/app/api/compare-stream/route.ts` and `src/app/api/compare/route.ts`
-- [ ] Rename `src/lib/mcp/opengov-skill.ts` → `src/lib/mcp/socrata-skill.ts`
-- [ ] Rename `OPENGOV_SKILL` constant → `SOCRATA_SKILL`
-- [ ] Update imports in API routes
-- [ ] Update GitHub display links in `src/app/about/page.tsx` and `src/components/SkillPromptDisclosure.tsx`
+- [ ] Rename env var: `OPENGOV_MCP_URL` → `SOCRATA_MCP_URL` in Vercel dashboard (after code deploy)
+- [x] Rename `opengovMcpTools` → `socrataMcpTools` in `src/lib/mcp/tools.ts`
+- [x] Update imports in `src/app/api/compare-stream/route.ts` and `src/app/api/compare/route.ts`
+- [x] Rename `src/lib/mcp/opengov-skill.ts` → `src/lib/mcp/socrata-skill.ts`
+- [x] Rename `OPENGOV_SKILL` constant → `SOCRATA_SKILL`
+- [x] Update imports in API routes
+- [x] Update GitHub display links in `src/app/about/page.tsx` and `src/components/SkillPromptDisclosure.tsx`
+- [x] Update `OPENGOV_MCP_URL` → `SOCRATA_MCP_URL` in `client.ts`, `README.md`, `CLAUDE.md`
 - [ ] Deploy and verify
 
 ---
 
 ## TODO: Remaining Rename Housekeeping
 
-- [ ] Add note to top of `docs/opengov-skill.md` that this was formerly called "OpenGov MCP"
-- [ ] Rename local directory `/Users/nathanstorey/Code/opengov-mcp-server` → `socrata-mcp-server` (cosmetic, local only)
+- [x] Add note to top of `docs/opengov-skill.md` that this was formerly called "OpenGov MCP"
+- [x] Rename local directory `/Users/nathanstorey/Code/opengov-mcp-server` → `socrata-mcp-server` (cosmetic, local only)
 
 ---
 

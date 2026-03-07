@@ -8,7 +8,7 @@ civic-ai-tools infrastructure without directly embedding it.
 Directory Structure:
     Code/
     ├── civic-ai-tools/          # Infrastructure (separate repo)
-    ├── opengov-mcp-server/      # MCP server (separate repo)
+    ├── socrata-mcp-server/      # MCP server (separate repo)
     └── civic-ai-tools/  # This project
         └── scripts/
             └── analyze_nyc_data.py  ← YOU ARE HERE
@@ -117,7 +117,7 @@ Directory Layout:
     │   ├── configs/mcp-templates/   # Configuration templates
     │   └── docs/                    # Infrastructure documentation
     │
-    ├── opengov-mcp-server/          # Separate MCP server (also shared)
+    ├── socrata-mcp-server/          # Separate MCP server (also shared)
     │   └── dist/index.js
     │
     ├── civic-ai-tools/      # Example project (THIS)
@@ -145,7 +145,7 @@ def show_mcp_workflow():
 When you open this project in Claude Code / Cursor:
 
 1. 📄 Loads .cursor/mcp.json
-   - Finds MCP server paths: ../../opengov-mcp-server/dist/index.js
+   - Finds MCP server paths: ../../socrata-mcp-server/dist/index.js
    - Finds Skill paths: ../../civic-ai-tools/skills/opengov-mcp-companion
 
 2. 🚀 Starts MCP Servers
@@ -184,7 +184,7 @@ To Use This Example:
 
 1. ✓ Ensure Prerequisites:
    - civic-ai-tools cloned to: /Users/nathanstorey/Code/civic-ai-tools
-   - opengov-mcp-server cloned and built (requires Node.js)
+   - socrata-mcp-server cloned and built (requires Node.js)
    - Python environment set up: cd civic-ai-tools && uv sync
 
 2. 🔧 Configure MCP:
