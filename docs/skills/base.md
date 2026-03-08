@@ -136,28 +136,70 @@ ORDER BY year
 | Building Permits | ~200–800/day | Up to 180 days | Up to 90 days |
 | Business Licenses | ~50–200/day | Up to 1 year | Up to 180 days |
 
-## NYC Open Data Key Datasets
+## Key Datasets by Portal
 
-### 311 Service Requests (`erm2-nwe9`)
-- Key fields: `complaint_type`, `borough`, `created_date`, `closed_date`
-- Common filters: complaint type, borough, date range
-- Aggregations: by complaint type, by borough, daily/weekly trends
+A full curated directory with ~20-30 datasets per portal is at [`docs/datasets.md`](../datasets.md). Below are the most-used datasets per portal for quick reference. Use the MCP `search` tool for datasets not listed here.
 
-### Restaurant Inspections (`43nn-pn8j`)
-- Key fields: `boro`, `grade`, `inspection_date`, `cuisine_description`
-- Common filters: borough, grade, date range
+### NYC (`data.cityofnewyork.us`)
 
-### Housing Violations (`wvxf-dwi5`)
-- Key fields: `boro`, `violationid`, `inspectiondate`
-- Common filters: borough, violation type, date range
+| Dataset | ID | Key Fields |
+|---------|----|------------|
+| 311 Service Requests (2020+) | `erm2-nwe9` | complaint_type, borough, created_date, closed_date |
+| Motor Vehicle Collisions | `h9gi-nx95` | crash_date, borough, number_of_persons_injured |
+| Restaurant Inspections | `43nn-pn8j` | dba, grade, inspection_date, cuisine_description |
+| Housing Violations | `wvxf-dwi5` | boro, violationid, inspectiondate, class |
+| Citywide Payroll | `k397-673e` | agency_name, title_description, base_salary, fiscal_year |
+| DOB Job Applications | `ic3t-wcy2` | job_type, borough, building_type, initial_cost |
+| NYPD Arrests (YTD) | `uip8-fykc` | arrest_date, arrest_boro, ofns_desc, perp_race |
+| Parking/Camera Violations | `nc67-uf89` | plate, violation, issue_date, amount_due |
 
-### Budget Data (`d52a-yn36`)
-- Key fields: `agency_name`, `budget_amount`, `fiscal_year`
-- Common filters: fiscal year, agency type
+### Chicago (`data.cityofchicago.org`)
 
-### Payroll Data (`k397-673e`)
-- Key fields: `agency_name`, `title_description`, `base_salary`
-- Common filters: agency, title, salary range
+| Dataset | ID | Key Fields |
+|---------|----|------------|
+| Crimes - 2001 to Present | `ijzp-q8t2` | date, primary_type, location_description, arrest, ward |
+| Traffic Crashes | `85ca-t3if` | crash_date, injuries_total, weather_condition |
+| Building Permits | `ydr8-5enu` | permit_type, issue_date, estimated_cost |
+| Food Inspections | `4ijn-s7e5` | dba_name, inspection_date, results, risk, violations |
+| Building Violations | `22u3-xenr` | violation_code, violation_description, address |
+| Business Licenses (Active) | `uupf-x98q` | license_number, business_activity, expiration_date |
+| Employee Salaries | `xzkq-xp2w` | name, job_titles, department, annual_salary |
+
+### San Francisco (`data.sfgov.org`)
+
+| Dataset | ID | Key Fields |
+|---------|----|------------|
+| 311 Cases | `vw6y-z8j6` | requested_datetime, service_name, status_description |
+| Police Incidents (2018+) | `wg3w-h783` | incident_date, incident_category, police_district |
+| Fire Incidents | `wr8u-xric` | alarm_dttm, primary_situation, address |
+| Building Permits | `i98e-djp9` | permit_number, filed_date, description, estimated_cost |
+| Eviction Notices | `5cei-gny5` | file_date, address, non_payment, ellis_act_withdrawal |
+| Registered Businesses | `g8m3-pdis` | dba_name, full_business_address, certificate_number |
+| Employee Compensation | `88g8-5mnd` | department, total_compensation, salaries, year |
+
+### Seattle (`data.seattle.gov`)
+
+| Dataset | ID | Key Fields |
+|---------|----|------------|
+| SPD Crime Data (2008+) | `tazs-3rd5` | offense_category, offense_date, neighborhood, beat |
+| Fire 911 Calls (real-time) | `kzjm-xkqj` | type, datetime, address, incident_number |
+| Building Permits | `76t5-zqzr` | permitnum, permitclass, statuscurrent, issueddate |
+| Code Complaints/Violations | `ez4a-iug7` | recordnum, statuscurrent, opendate, recordtype |
+| Business Licenses | `wnbq-64tb` | business_legal_name, naics_code, street_address |
+| City Wage Data | `2khk-5ukd` | hourly_rate, job_title, department |
+
+### Los Angeles (`data.lacity.org`)
+
+**Note:** Only `get_data` works for LA — search and fetch tools fail.
+
+| Dataset | ID | Key Fields |
+|---------|----|------------|
+| MyLA311 2025 | `h73f-gn57` | created_date, request_type, status, address |
+| MyLA311 2022 | `i5ke-k6by` | created_date, request_type, status, address |
+| MyLA311 2020 | `rq3b-xjk8` | created_date, request_type, status, address |
+| Crime Data (2020-2024) | `2nrs-mtv8` | date_occ, crm_cd, area, location, lat, lon |
+| Active Businesses | `6rrh-rzua` | business_name, street_address, naics, dba_name |
+| Traffic Collisions (2010+) | `d5tf-ez2w` | date_occ, area, location_1, vict_age |
 
 ## Error Handling
 
