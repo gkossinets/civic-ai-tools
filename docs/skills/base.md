@@ -90,6 +90,30 @@ WHERE amount > 1000 AND amount < 10000
 WHERE status IN ('Active', 'Pending', 'Approved')
 ```
 
+### Text Column Filtering
+
+SoQL string comparisons are **case-sensitive**. Always use `upper()` for text filters:
+
+```sql
+WHERE upper(boro) = 'MANHATTAN'
+WHERE upper(complaint_type) = 'NOISE - RESIDENTIAL'
+```
+
+When filtering on a text column for the first time, sample distinct values to learn the actual casing and spelling:
+
+```sql
+SELECT DISTINCT boro LIMIT 20
+```
+
+### Zero-Result Verification
+
+If a query returns zero results and the user's question seems reasonable, **DO NOT fabricate explanations**. Instead:
+
+1. Sample distinct values for the filter columns (`SELECT DISTINCT col LIMIT 20`)
+2. Check if your filter values match the actual casing/spelling in the data
+3. Try broader filters (remove one condition at a time)
+4. Only conclude the data doesn't exist after exhausting these verification steps
+
 ### Aggregation Patterns
 ```sql
 SELECT department, COUNT(*) as count, SUM(amount) as total
