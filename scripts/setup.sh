@@ -128,7 +128,7 @@ if [ -d "$SOCRATA_DIR" ]; then
     fi
 else
     echo "Cloning socrata-mcp-server..."
-    git clone https://github.com/npstorey/socrata-mcp-server.git "$SOCRATA_DIR"
+    git clone https://github.com/gkossinets/socrata-mcp-server.git "$SOCRATA_DIR"
 
     print_step "Building socrata-mcp-server..."
     cd "$SOCRATA_DIR"
